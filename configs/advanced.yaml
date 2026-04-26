@@ -1,0 +1,69 @@
+# Model configuration for advanced recommender
+model:
+  name: "advanced_recommender"
+  backbone: "openai/clip-vit-base-patch32"
+  embedding_dim: 512
+  hidden_dim: 256
+  num_attention_heads: 8
+  num_layers: 2
+  dropout: 0.1
+  temperature: 0.07
+  use_hard_negatives: true
+  hard_negative_ratio: 0.5
+
+# Data configuration
+data:
+  dataset_name: "synthetic_products"
+  batch_size: 16  # Smaller batch size for advanced model
+  num_workers: 4
+  image_size: 224
+  max_text_length: 77
+  train_split: 0.8
+  val_split: 0.1
+  test_split: 0.1
+
+# Training configuration
+training:
+  epochs: 150  # More epochs for advanced model
+  learning_rate: 5e-5  # Lower learning rate
+  weight_decay: 1e-4
+  warmup_steps: 2000
+  gradient_clip_norm: 1.0
+  mixed_precision: true
+  save_every_n_epochs: 10
+  eval_every_n_epochs: 5
+
+# Evaluation configuration
+evaluation:
+  metrics:
+    - "recall@1"
+    - "recall@5"
+    - "recall@10"
+    - "map"
+    - "ndcg"
+  top_k_values: [1, 5, 10, 20]
+  cross_modal_eval: true
+
+# Device configuration
+device:
+  auto_detect: true
+  fallback_order: ["cuda", "mps", "cpu"]
+  deterministic: true
+  seed: 42
+
+# Logging configuration
+logging:
+  level: "INFO"
+  log_dir: "logs"
+  use_tensorboard: true
+  use_wandb: false
+  project_name: "multimodal-recommendation-advanced"
+
+# Demo configuration
+demo:
+  interface: "streamlit"
+  host: "localhost"
+  port: 8501
+  max_recommendations: 10
+  show_attention_maps: true
+  enable_safety_filters: true
